@@ -807,6 +807,9 @@ def output_to_target(output, width, height):
     targets = []
     for i, o in enumerate(output):
         if o is not None:
+            if isinstance(o, torch.Tensor):
+                o = o.cpu().numpy()
+                
             for pred in o:
                 box = pred[:4]
                 w = (box[2] - box[0]) / width
@@ -815,12 +818,7 @@ def output_to_target(output, width, height):
                 y = box[1] / height + h / 2
                 conf = pred[4]
                 cls = int(pred[5])
-                i = torch.tensor(i,device='cpu')
-                cls = torch.tensor(cls,device='cpu')
-                x = torch.tensor(x,device='cpu')
-                y = torch.tensor(y,device='cpu')
-                w = torch.tensor(w,device='cpu')
-                h = torch.tensor(i,device='cpu')
+              
 
 
                 targets.append([i, cls, x, y, w, h, conf])
